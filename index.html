@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>
+		
+	</title>
+</head>
+<body>
+	<script type="text/javascript">
+/*У вас есть 2 вида бургеров - гамбургер и чизбургер. Они отличаются по составу, весу и калорийности. У чизбургера есть сыр и котлета из курицы, у гамбургера - говядина и сыра нет. Есть 2 размера md/xl
+К ним можно заказать двойную котлету и выбрать какого именно вида, двойной соус, а для чизбургера - еще и двойной сыр. Можете дополнительно добавить картофель и полить майонезом или кетчупом.
+Напишите программу, расчитывающую стоимость и калорийность гамбургера. конструктор Бургер, константы, методы для выбора опций и расчета нужных величин. Используйте дополнительные классы, по необходимости.
+*/
+
+		const BUNS=[
+			{
+				name:'cheeseBun',
+				size:'MD',
+				price:10,
+				calorie:150
+			},
+			{
+				name:'cheeseBun',
+				size:'XL',
+				price:20,
+				calorie:300
+			},
+			{
+				name:'humbBun',
+				size:'MD',
+				price:12,
+				calorie:170,
+			},
+			{
+				name:'humbBun',
+				size:'XL',
+				price:24,
+				calorie:340
+			},
+			{
+				name:'glutenFreeBun',
+				size:'MD',
+				price:20,
+				calorie:60
+			},
+			{
+				name:'glutenFreeBun',
+				size:'XL',
+				price:40,
+				calorie:120
+			}
+
+		];
+		 const CUTLET=[
+		 	{
+		 		name:'chiken',
+				size:'MD',
+		 		price:50,
+		 		calorie:200
+		 	},
+		 	{
+		 		name:'chiken',
+		 		size:'XL',
+		 		price:100,
+		 		calorie:400
+		 	},
+		 	{
+		 		name:'beef',
+		 		size:'MD',
+		 		price:60,
+		 		calorie:280
+		 	},
+		 	{
+		 		name:'beef',
+		 		size:'XL',
+		 		price:120,
+		 		calorie:500
+		 	}
+		 ]
+		 const SAUCE=[
+		 	{
+		 		name:'tomato',
+		 		price:5,
+		 		calorie:10
+		 	},
+		 	{
+		 		name:'chili',
+		 		price:7,
+		 		calorie:12
+		 	},
+		 	{
+		 		name:'garlic',
+		 		price:7,
+		 		calorie:12
+		 	},
+		 	{
+		 		name:'mayo',
+		 		price:8,
+		 		calorie:15
+		 	}
+		 ]
+		 const ADITIONALPRODUCTS=[
+		 	{
+		 		name:'cheese',
+		 		price:15,
+		 		calorie:30
+		 	},
+			{
+		 		name:'vegetables',
+		 		price:5,
+		 		calorie:5
+		 	}, 
+		 	{
+		 		name:'potatoes',
+		 		price:50,
+		 		calorie:200
+		 	}
+		 ]
+
+		function CreateBurger(bun,cutlet,sauce){
+			this.burgerBun=bun;
+			this.burgerCutlet=cutlet;
+			this.burgerSauce=sauce;
+		};
+		CreateBurger.prototype.calculateCalories=function(){
+			 return Object.values(this).reduce(function(prev, current){
+			 	return prev+=current.calorie;
+			 },0);
+		}
+		CreateBurger.prototype.calculatePrice=function(){
+			 return Object.values(this).reduce(function(prev, current){
+			 	return prev+=current.price;
+			 },0);
+		}
+		CreateBurger.prototype.doubleCutletSmall=function(cutletType){
+			return this.secondCutlet=CUTLET.filter(item=>(item.name===cutletType)&&(item.size==='MD'))[0];
+		}
+		CreateBurger.prototype.doubleCutletBIG=function(cutletType){
+			return this.secondCutlet=CUTLET.filter(item=>(item.name===cutletType)&&(item.size==='XL'))[0];
+		}
+		CreateBurger.prototype.doubleSauce=function(){
+			return this.secondSause=this.burgerSauce;
+		}
+		CreateBurger.prototype.addSmt=function(addingProduct){
+			return this.addingProduct=ADITIONALPRODUCTS.filter(item=>(item.name===addingProduct))[0];
+		}
+		CreateBurger.prototype.addSauce=function(addingSauce){
+			return this.addingSauce=SAUCE.filter(item=>(item.name===addingSauce))[0];
+		}
+		
+		CreateCheeseburgerSmall.prototype=Object.create(CreateBurger.prototype);
+		function CreateCheeseburgerSmall(
+			bun=BUNS.filter(item=>(item.name==='cheeseBun')&&(item.size==='MD'))[0],
+			cutlet=CUTLET.filter(item=>(item.name==='chiken')&&(item.size==='MD'))[0], 
+			sauce=SAUCE.filter(item=>(item.name==='tomato'))[0], 
+			cheese=ADITIONALPRODUCTS.filter(item=>item.name==='cheese')[0]){
+				CreateBurger.call(this,bun,cutlet,sauce);
+				this.burgerCheese=cheese;
+		};
+		CreateCheeseburgerSmall.prototype.doubleCheese=function(){
+			return this.additionalCheese=this.burgerCheese;
+		}
+		CreateCheesburgerBIG.prototype=Object.create(CreateBurger.prototype);
+		function CreateCheesburgerBIG(
+			bun=BUNS.filter(item=>(item.name==='cheeseBun')&&(item.size==='XL'))[0],
+			cutlet=CUTLET.filter(item=>(item.name==='chiken')&&(item.size==='XL'))[0], 
+			sauce=SAUCE.filter(item=>(item.name==='tomato'))[0], 
+			cheese=ADITIONALPRODUCTS.filter(item=>item.name==='cheese')[0]){
+				CreateBurger.call(this,bun,cutlet,sauce);
+				this.burgerCheese=cheese;
+		};
+		CreateHamburgerSmall.prototype=Object.create(CreateBurger.prototype);
+		function CreateHamburgerSmall(
+			bun=BUNS.filter(item=>(item.name==='humbBun')&&(item.size==='MD'))[0],
+			cutlet=CUTLET.filter(item=>(item.name==='beef')&&(item.size==='MD'))[0], 
+			sauce=SAUCE.filter(item=>(item.name==='chili'))[0], 
+			veg=ADITIONALPRODUCTS.filter(item=>item.name==='vegetables')[0]){
+			CreateBurger.call(this,bun,cutlet,sauce);
+		};
+		CreateHamburgerBIG.prototype=Object.create(CreateBurger.prototype);
+		function CreateHamburgerBIG(
+			bun=BUNS.filter(item=>(item.name==='humbBun')&&(item.size==='XL'))[0],
+			cutlet=CUTLET.filter(item=>(item.name==='beef')&&(item.size==='XL'))[0], 
+			sauce=SAUCE.filter(item=>(item.name==='chili'))[0], 
+			veg=ADITIONALPRODUCTS.filter(item=>item.name==='vegetables')[0]){
+			CreateBurger.call(this,bun,cutlet,sauce);
+		};
+		 const cheeseburger=new CreateCheeseburgerSmall;
+		 console.log(cheeseburger);
+		 console.log( 'Calories: '+ cheeseburger.calculateCalories());
+		 console.log('Price: ' + cheeseburger.calculatePrice());
+		 cheeseburger.doubleCutletSmall('chiken');
+		 console.log( 'Calories: '+ cheeseburger.calculateCalories());
+		 console.log('Price: ' + cheeseburger.calculatePrice());
+		 cheeseburger.doubleCheese();
+		 console.log( 'Calories: '+ cheeseburger.calculateCalories());
+		 console.log('Price: ' + cheeseburger.calculatePrice());
+		 const cheeseburgerBIG=new CreateCheesburgerBIG;
+		 console.log(cheeseburgerBIG);
+		 console.log('Calories: ' + cheeseburgerBIG.calculateCalories());
+		 console.log('Price: ' + cheeseburgerBIG.calculatePrice());
+		 const hamburger= new CreateHamburgerSmall;
+		 console.log(hamburger);
+		 console.log('Calories: ' + hamburger.calculateCalories());
+		 console.log('Price: ' + hamburger.calculatePrice());
+		 hamburger.doubleCutletBIG('beef');
+		 console.log(hamburger);
+		 console.log('Calories: ' + hamburger.calculateCalories());
+		 console.log('Price: ' + hamburger.calculatePrice());
+		 const hamburgerBIG= new CreateHamburgerBIG;
+		 console.log(hamburgerBIG);
+		 console.log('Calories: ' + hamburgerBIG.calculateCalories());
+		 console.log('Price: ' + hamburgerBIG.calculatePrice());
+		 hamburgerBIG.doubleSauce();
+		 console.log(hamburgerBIG);
+		 console.log('Calories: ' + hamburgerBIG.calculateCalories());
+		 console.log('Price: ' + hamburgerBIG.calculatePrice());
+		 hamburgerBIG.addSmt('potatoes');
+		 hamburgerBIG.addSauce('mayo');
+		 console.log('Calories: ' + hamburgerBIG.calculateCalories());
+		 console.log('Price: ' + hamburgerBIG.calculatePrice());
+
+
+		
+
+	</script>
+</body>
+</html>
