@@ -114,115 +114,104 @@
 		 		calorie:200
 		 	}
 		 ]
-		function CreateBurger(bun,cutlet,sauce){
-			this.burgerBun=[];
+		function CreateBurger(size, bun, cutlet, sauce, additional){
+			this.size = size;
+			this.burgerBun = [];
 			this.burgerBun.push(bun);
-			this.burgerCutlet=[];
+			this.burgerCutlet = [];
 			this.burgerCutlet.push(cutlet);
-			this.burgerSauce=[];
+			this.burgerSauce = [];
 			this.burgerSauce.push(sauce);
+			this.burgerAdditional = [];
+			this.burgerAdditional.push(additional);
 
 		};
 
 
-		CreateBurger.prototype.calculateCalories=function(){
-			 return Object.values(this).reduce(function(prev, current){
-			 	return prev+=current.reduce(function(pr, cr){
-			 		return pr+=cr.calorie
-			 	},0)
-			 },0);
+		CreateBurger.prototype.calculateCalories = function () {
+			 return Object.values(this).filter(item => ( Array.isArray(item) )).reduce ( function ( prev, current ) {
+			 	return prev += current.reduce ( function ( pr, cr ) {
+			 		return pr += cr.calorie;
+			 	}, 0)
+			 }, 0);
 		}
 
-		CreateBurger.prototype.calculatePrice=function(){
-			 return Object.values(this).reduce(function(prev, current){
-			 	return prev+=current.reduce(function(pr, cr){
-			 		return pr+=cr.price;
-			 	},0)
-			 },0);
+		CreateBurger.prototype.calculatePrice = function () {
+			 return Object.values(this).filter( item => ( Array.isArray(item) )).reduce ( function ( prev, current ) {
+			 	return prev += current.reduce ( function ( pr, cr ) {
+			 		return pr += cr.price;
+			 	}, 0)
+			 }, 0);
 		}
 
-		CreateBurger.prototype.addTopping=function(addedSauce){
-			return this.burgerSauce.push(SAUCE.filter(item=>(item.name===addedSauce))[0]);
+		CreateBurger.prototype.addTopping = function ( addedSauce ) {
+			return this.burgerSauce.push ( SAUCE.find ( item => ( item.name === addedSauce ) ) );
 		}
 	
-		CreateBurger.prototype.addCutlet=function(cutletType, size){
-			return this.burgerCutlet.push(CUTLET.filter(item=>(item.name===cutletType)&&(item.size===size))[0]);
+		CreateBurger.prototype.addCutlet = function ( cutletType, size ) {
+			return this.burgerCutlet.push ( CUTLET.find ( item => ( item.name === cutletType ) && ( item.size === size ) ) );
+		}
+		CreateBurger.prototype.addSomeProduct = function ( additionalProduct ) {
+			return this.burgerAdditional.push ( ADITIONALPRODUCTS.find ( item => item.name === additionalProduct ) );
 		}
 
-		CreateCheeseburger.prototype=Object.create(CreateBurger.prototype);
-		function CreateCheeseburger(size='XL'){
-				bun=BUNS.filter(item=>(item.name==='cheeseBun')&&(item.size===size))[0], 
-				cutlet=CUTLET.filter(item=>(item.name==='chiken')&&(item.size===size))[0], 
-				sauce=SAUCE.filter(item=>(item.name==='tomato'))[0], 
-				additional=ADITIONALPRODUCTS.filter(item=>item.name==='cheese')[0]
-				CreateBurger.call(this,bun,cutlet,sauce);
-				this.burgerAdditional=[];
-				this.burgerAdditional.push(additional);
+		CreateCheeseburger.prototype = Object.create ( CreateBurger.prototype ) ;
+		function CreateCheeseburger ( size, bun, cutlet, sauce, additional ) {
+				size = size || 'XL';
+				bun = bun || BUNS.find( item => ( item.name === 'cheeseBun' ) && ( item.size === size ) ) ;
+				cutlet = cutlet || CUTLET.find ( item => ( item.name === 'chiken' ) && ( item.size === size ) ) ; 
+				sauce = sauce || SAUCE.find ( item => ( item.name === 'tomato' ) );
+				additional = additional || ADITIONALPRODUCTS.find ( item => item.name === 'cheese' );
+				CreateBurger.call ( this, size, bun, cutlet, sauce, additional);
+				
+		}
+
+		CreateCheeseburger.prototype.addCheese = function () {
+			return this.burgerAdditional.push(ADITIONALPRODUCTS.find( item => item.name === 'cheese' ) );
+		}
+
+		CreateHamburger.prototype = Object.create( CreateBurger.prototype );
+		function CreateHamburger (size, bun, cutlet, sauce, additional ){
+			size = size || 'XL';
+			bun = bun || BUNS.find ( item => ( item.name === 'humbBun' ) && ( item.size === size ) ); 
+			cutlet = cutlet || CUTLET.find ( item => ( item.name === 'beef' ) && ( item.size === size ) ) ;
+			sauce = sauce || SAUCE.find ( item => ( item.name === 'chili' ) ) ;
+			additional = additional || ADITIONALPRODUCTS.find ( item => item.name === 'vegetables' ) ;
+				CreateBurger.call(this, size, bun, cutlet, sauce, additional );
 
 		};
-			CreateCheeseburger.prototype.addCheese=function(){
-			return this.burgerAdditional.push(ADITIONALPRODUCTS.filter(item=>item.name==='cheese')[0]);
-		}
-		CreateCheeseburger.prototype.addSmt=function(additionalProduct){
-			return this.burgerAdditional.push(ADITIONALPRODUCTS.filter(item=>item.name===additionalProduct)[0]);
-		}
 
-		CreateHamburger.prototype=Object.create(CreateBurger.prototype);
-		function CreateHamburger(size='XL'){
-			bun=BUNS.filter(item=>(item.name==='humbBun')&&(item.size===size))[0], 
-			cutlet=CUTLET.filter(item=>(item.name==='beef')&&(item.size===size))[0], 
-			sauce=SAUCE.filter(item=>(item.name==='chili'))[0], 
-			additional=ADITIONALPRODUCTS.filter(item=>item.name==='vegetables')[0]
-				CreateBurger.call(this,bun,cutlet,sauce);
-				this.burgerAdditional=[];
-				this.burgerAdditional.push(additional);
-		};
-		CreateHamburger.prototype.addSmt=function(additionalProduct){
-			return this.burgerAdditional.push(ADITIONALPRODUCTS.filter(item=>item.name===additionalProduct)[0]);
-		}
-
-
-		/* need for test
-		const cheeseburger=new CreateCheeseburger('MD');
-		console.log(cheeseburger);
-		console.log( 'Calories: '+ cheeseburger.calculateCalories());
-		console.log('Price: ' + cheeseburger.calculatePrice());
-		const cheeseburger=new CreateCheeseburger();
-		console.log(cheeseburger);
-		console.log( 'Calories: '+ cheeseburger.calculateCalories());
-		console.log('Price: ' + cheeseburger.calculatePrice());
-		cheeseburger.addTopping('mayo');
-		cheeseburger.addTopping('tomato');
-		console.log(cheeseburger);
-		console.log( 'Calories: '+ cheeseburger.calculateCalories());
-		console.log('Price: ' + cheeseburger.calculatePrice());
-		cheeseburger.addCutlet('beef','XL');
-		console.log(cheeseburger);
-		console.log( 'Calories: '+ cheeseburger.calculateCalories());
-		console.log('Price: ' + cheeseburger.calculatePrice());
-		cheeseburger.addCheese();
-		console.log(cheeseburger);
-		console.log( 'Calories: '+ cheeseburger.calculateCalories());
-		console.log('Price: ' + cheeseburger.calculatePrice());
-		cheeseburger.addSmt('potatoes');
-		console.log( 'Calories: '+ cheeseburger.calculateCalories());
-		console.log('Price: ' + cheeseburger.calculatePrice());
-		*/
+		/*
+		 //for test
+		const cheeseburger1=new CreateCheeseburger('MD');//small
+		const cheeseburger=new CreateCheeseburger();//normal
 		
-		/*const hamburger = new CreateHamburger('MD');
-		 console.log(hamburger);
-		 console.log('Calories: ' + hamburger.calculateCalories());
-		 console.log('Price: ' + hamburger.calculatePrice());
-		hamburger.addTopping('chili')
-		  console.log(hamburger);
-		 console.log('Calories: ' + hamburger.calculateCalories());
-		 console.log('Price: ' + hamburger.calculatePrice());
-		 hamburger.addCutlet('beef','MD');
-		 console.log(hamburger);
-		 console.log('Calories: ' + hamburger.calculateCalories());
-		 console.log('Price: ' + hamburger.calculatePrice());
-		 */
+		cheeseburger.addTopping('mayo');
+		cheeseburger1.addTopping('tomato');
+		cheeseburger.addCutlet('beef','XL');;
+		cheeseburger.addCheese();
+		cheeseburger.addSomeProduct('potatoes');
+		console.log(cheeseburger1);
+		console.log( 'Calories: '+ cheeseburger1.calculateCalories());
+		console.log('Price: ' + cheeseburger1.calculatePrice());
+		console.log(cheeseburger);
+		console.log( 'Calories: '+ cheeseburger.calculateCalories());
+		console.log('Price: ' + cheeseburger.calculatePrice());
+		
+		const hamburger1 = new CreateHamburger('MD'); //small
+		const hamburger = new CreateHamburger(); //normal
+		hamburger1.addTopping('chili')
+		hamburger.addCutlet('beef','MD');
+		hamburger.addSomeProduct('cheese')
+		console.log(hamburger);
+		console.log('Calories: ' + hamburger.calculateCalories());
+		console.log('Price: ' + hamburger.calculatePrice());
+		console.log(hamburger1);
+		console.log('Calories: ' + hamburger1.calculateCalories());
+		console.log('Price: ' + hamburger1.calculatePrice());
+		*/
 
+		
 </script>
 </body>
 </html>		
